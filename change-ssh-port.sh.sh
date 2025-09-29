@@ -1,4 +1,3 @@
-Bash
 #!/bin/bash
 
 # 通用 SSH 端口修改脚本

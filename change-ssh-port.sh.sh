@@ -1,5 +1,4 @@
-
-```bash
+Bash
 #!/bin/bash
 
 # 通用 SSH 端口修改脚本
@@ -34,7 +33,8 @@ if grep -q "^Port " /etc/ssh/sshd_config; then
     sed -i "s/^Port .*/Port $NEW_PORT/" /etc/ssh/sshd_config
 else
     # 如果不存在 Port 行，在文件开头添加
-    echo -e "Port $NEW_PORT\n$(cat /etc/ssh/sshd_config)" > /etc/ssh/sshd_config
+    echo -e "Port $NEW_PORT\n$(cat /etc/ssh/sshd_config)" > /etc/ssh/sshd_config.tmp
+    mv /etc/ssh/sshd_config.tmp /etc/ssh/sshd_config
 fi
 
 # 配置防火墙 (支持 ufw, firewalld, iptables)

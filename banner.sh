@@ -1,6 +1,5 @@
 #!/bin/sh
-# 安装登录后显示的彩色 Banner（使用 /etc/banner + /etc/profile）
-
+# 安装登录后显示的彩色 Banner（仅显示 /etc/banner，禁用 MOTD）
 BANNER_FILE="/etc/banner"
 PROFILE_FILE="/etc/profile"
 
@@ -36,4 +35,18 @@ fi
 EOF
 fi
 
-echo "✅ 登录后Banner已配置完成（内容存放在 $BANNER_FILE）"
+# 3) 禁用 MOTD（Ubuntu 特有）
+# 注释 pam_motd 调用
+if [ -f /etc/pam.d/sshd ]; then
+    sed -i 's/^\(session\s\+optional\s\+pam_motd.so.*\)$/# \1/' /etc/pam.d/sshd
+fi
+if [ -f /etc/pam.d/login ]; then
+    sed -i 's/^\(session\s\+optional\s\+pam_motd.so.*\)$/# \1/' /etc/pam.d/login
+fi
+
+# 禁用 update-motd.d 脚本执行权限
+if [ -d /etc/update-motd.d ]; then
+    chmod -x /etc/update-motd.d/*
+fi
+
+echo "✅彩色Banner已配置完成（已屏蔽 Ubuntu MOTD）"
